@@ -47,7 +47,9 @@ def doc_to_dict(n):
         return first.data
     else:
         return dict((child.nodeName, doc_to_dict(child))
-                    for child in n.childNodes)
+                    for child in n.childNodes
+                    if (child.nodeName != '#text')
+                    or (child.data.strip() != ''))
 
 
 def dict_to_xml(d):
