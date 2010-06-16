@@ -1,16 +1,27 @@
 from .ups import UPSInterface
+from .fedex import FedexInterface
+from .usps import USPSInterface
 
 
 __version__ = '0.1'
 
 _interfaces = {}
 
-def register_interface(shipper, interface_class):
+def register_interface(shipper, interface):
     global _interfaces
-    _interfaces[shipper] = interface_class
+    _interfaces[shipper] = interface
 
 
-register_interface('UPS', UPSInterface)
+def get_interface(shipper):
+        if shipper in _interfaces:
+            return _interfaces[shipper]
+        else:
+            raise UnsupportedShipper
+
+
+register_interface('UPS', UPSInterface())
+register_interface('FedEx', FedexInterface())
+register_interface('USPS', USPSInterface())
 
 
 class UnsupportedShipper(Exception):
@@ -18,31 +29,24 @@ class UnsupportedShipper(Exception):
 
 
 class TrackingInfo(object):
-    pass
+    
+    def __init__(self, delivery_date, status):
+        self.delivery_date = delivery_date
+        sel.status = status
 
 
 class Package(object):
 
     def __init__(self, tracking_number):
         self.tracking_number = tracking_number
-        if self.tracking_number.startswith('1Z'):
-            self.shipper = 'UPS'
-        elif len(self.tracking_number) == 15:
-            self.shipper = 'FedEx'
-        elif self.tracking_number.startswith('91'):
-            self.shipper = 'USPS'
-        else:
-            self.shipper = None
+        self.shipper = None
+        for shipper, iface in _interfaces.iteritems():
+            if iface.identify(self.tracking_number):
+                self.shipper = shipper
+                break
     
-    def _interface(self):
-        if self.shipper in _interfaces:
-            return _interfaces[self.shipper]()
-            iface.track(self.tracking_number)
-        else:
-            raise UnsupportedShipper
-
     def track(self):
-        return self._interface().track(self.tracking_number)
+        return get_interface(self.shipper).track(self.tracking_number)
 
     def url(self):
-        return self._interface().url(self.tracking_number)
+        return get_interface(self.shipper).url(self.tracking_number)

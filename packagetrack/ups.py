@@ -6,11 +6,14 @@ from .xml_dict import dict_to_xml
 class UPSInterface(object):
     url = 'https://wwwcie.ups.com/ups_app/xml/Track'
 
-    def __init__(self, license_number, user_id, password):
+    def __init__(self, license_number=None, user_id=None, password=None):
         self.license_number = license_number
         self.user_id = user_id
         self.password = password
         self.attrs = {'xml:lang': 'en-US'}
+
+    def identify(self, tracking_number):
+        return tracking_number.startswith('1Z')
 
     def build_access_request(self):
         d = {'AccessRequest': {'AccessLicenseNumber': self.license_number,
