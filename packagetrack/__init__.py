@@ -1,16 +1,13 @@
 __version__ = '0.1'
 
 
-def identify_tracking_num(num):
-    """
-    This could be better. See more info here:
-        http://answers.google.com/answers/threadview/id/207899.html
-    """
-    if num.startswith('1Z'):
-        return 'UPS'
-    elif len(num) == 15:
-        return 'FedEx'
-    elif num.startswith('91'):
-        return 'USPS'
-    else:
-        return None
+class Package(object):
+
+    def __init__(self, tracking_number):
+        self.tracking_number = tracking_number
+        if self.tracking_number.startswith('1Z'):
+            self.shipper = 'UPS'
+        elif len(self.tracking_number) == 15:
+            self.shipper = 'FedEx'
+        elif self.tracking_number.startswith('91'):
+            self.shipper = 'USPS'
