@@ -1,0 +1,8 @@
+# Test coverage files.
+.coverage
+cover/
+
+# Setuptools stuff.
+packagetrack.egg-info/
+build/
+dist/
