@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from packagetrack import Package
+from packagetrack import Package, UnsupportedShipper
 
 
 class TestPackageTrack(TestCase):
@@ -16,3 +16,12 @@ class TestPackageTrack(TestCase):
 
     def test_identify_unknown(self):
         assert Package('143244235235').shipper == None
+
+    def test_track_unknown(self):
+        try:
+            Package('123912412480').track()
+        except UnsupportedShipper:
+            pass
+        else:
+            raise AssertionError("tracking package with unknown "
+                                 "shipper should fail")
