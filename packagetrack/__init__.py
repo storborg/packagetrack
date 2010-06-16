@@ -11,3 +11,5 @@ class Package(object):
             self.shipper = 'FedEx'
         elif self.tracking_number.startswith('91'):
             self.shipper = 'USPS'
+        else:
+            self.shipper = None
