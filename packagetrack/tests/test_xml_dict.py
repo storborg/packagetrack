@@ -26,3 +26,7 @@ class TestXMLDict(TestCase):
     def test_roundtrip(self):
         assert (xml_dict.xml_to_dict(xml_dict.dict_to_xml(test_dict)) ==
                 test_dict)
+
+    def test_attribute(self):
+        xml = xml_dict.dict_to_xml(test_dict, {'xml:lang': 'en-US'})
+        assert '<foo xml:lang="en-US">' in xml

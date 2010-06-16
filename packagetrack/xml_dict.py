@@ -23,7 +23,7 @@ Will be transformed to and from this dict:
 from xml.dom.minidom import getDOMImplementation, parseString
 
 
-def dict_to_doc(d):
+def dict_to_doc(d, attrs=None):
     assert len(d) == 1
     impl = getDOMImplementation()
     doc = impl.createDocument(None, d.keys()[0], None)
@@ -36,6 +36,10 @@ def dict_to_doc(d):
                 dict_to_nodelist(child, new)
             else:
                 new.appendChild(doc.createTextNode(child))
+
+    if attrs:
+        for key, val in attrs.iteritems():
+            doc.documentElement.setAttribute(key, val)
 
     dict_to_nodelist(d.values()[0], doc.documentElement)
     return doc
@@ -52,8 +56,8 @@ def doc_to_dict(n):
                     or (child.data.strip() != ''))
 
 
-def dict_to_xml(d):
-    return dict_to_doc(d).toxml()
+def dict_to_xml(d, attrs=None):
+    return dict_to_doc(d, attrs).toxml()
 
 
 def xml_to_dict(s):
