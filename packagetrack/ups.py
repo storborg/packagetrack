@@ -1,10 +1,12 @@
 import urllib
+from datetime import datetime, date, time
 
-from .xml_dict import dict_to_xml
+from .xml_dict import dict_to_xml, xml_to_dict
+from .data import TrackingInfo
 
 
 class UPSInterface(object):
-    url = 'https://wwwcie.ups.com/ups_app/xml/Track'
+    url = 'https://wwwcie.ups.com/ups.app/xml/Track'
 
     def __init__(self, license_number=None, user_id=None, password=None):
         self.license_number = license_number
@@ -32,22 +34,36 @@ class UPSInterface(object):
                 self.build_track_request(tracking_number))
 
     def send_request(self, tracking_number):
-        body = self.build_request(self.tracking_number)
+        body = self.build_request(tracking_number)
         webf = urllib.urlopen(self.url, body)
         resp = webf.read()
         webf.close()
+        return resp
 
-    def parse_request(self, resp):
-        main = resp['TrackResponse']
-        response = main['Response']
+    def parse_response(self, raw):
+        root = xml_to_dict(raw)['TrackResponse']
+        response = root['Response']
         status_code = response['ResponseStatusCode']
         status_description = response['ResponseStatusDescription']
+        # Check status code?
 
-        # Parse activity.
+        # Parse delivery date, status, and last update.
+        est_delivery_date = datetime.strptime(
+            root['Shipment']['ScheduledDeliveryDate'],
+            "%Y%m%d")
 
-        # Parse status.
+        package = root['Shipment']['Package']
+        activity = package['Activity']
+        last_update_date = datetime.strptime(activity['Date'], "%Y%m%d").date()
+        last_update_time = datetime.strptime(activity['Time'], "%H%M%S").time()
+        last_update = datetime.combine(last_update_date, last_update_time)
+        status = activity['Status']['StatusType']['Description']
 
+        return TrackingInfo(last_update=last_update,
+                            delivery_date=est_delivery_date,
+                            status=status)
         
     def track(self, tracking_number):
         "Track a UPS package by number. Returns just a delivery date."
-        resp = self.make_request(self, tracking_number)
+        resp = self.send_request(tracking_number)
+        return self.parse_response(resp)
