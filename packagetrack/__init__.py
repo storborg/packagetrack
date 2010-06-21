@@ -7,6 +7,12 @@ __version__ = '0.1'
 
 _interfaces = {}
 
+
+UPS_LICENSE_NUMBER = None
+UPS_USER_ID = None
+UPS_PASSWORD = None
+
+
 def register_interface(shipper, interface):
     global _interfaces
     _interfaces[shipper] = interface
@@ -19,12 +25,9 @@ def get_interface(shipper):
             raise UnsupportedShipper
 
 
-def init(ups_license_number, ups_user_id, ups_password):
-    register_interface('UPS', UPSInterface(license_number=ups_license_number,
-                                           user_id=ups_user_id,
-                                           password=ups_password))
-    register_interface('FedEx', FedexInterface())
-    register_interface('USPS', USPSInterface())
+register_interface('UPS', UPSInterface())
+register_interface('FedEx', FedexInterface())
+register_interface('USPS', USPSInterface())
 
 
 class UnsupportedShipper(Exception):

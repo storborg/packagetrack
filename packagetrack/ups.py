@@ -1,6 +1,7 @@
 import urllib
 from datetime import datetime, date, time
 
+import packagetrack
 from .xml_dict import dict_to_xml, xml_to_dict
 from .data import TrackingInfo
 
@@ -8,19 +9,17 @@ from .data import TrackingInfo
 class UPSInterface(object):
     url = 'https://wwwcie.ups.com/ups.app/xml/Track'
 
-    def __init__(self, license_number=None, user_id=None, password=None):
-        self.license_number = license_number
-        self.user_id = user_id
-        self.password = password
+    def __init__(self):
         self.attrs = {'xml:lang': 'en-US'}
 
     def identify(self, tracking_number):
         return tracking_number.startswith('1Z')
 
     def build_access_request(self):
-        d = {'AccessRequest': {'AccessLicenseNumber': self.license_number,
-                               'UserId': self.user_id,
-                               'Password': self.password}}
+        d = {'AccessRequest':
+             {'AccessLicenseNumber': packagetrack.UPS_LICENSE_NUMBER,
+              'UserId': packagetrack.UPS_USER_ID,
+              'Password': packagetrack.UPS_PASSWORD}}
         return dict_to_xml(d, self.attrs)
 
     def build_track_request(self, tracking_number):
