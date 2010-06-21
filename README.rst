@@ -6,7 +6,7 @@ packagetrack - Track UPS packages
     Scott Torborg (storborg)
 :Version: 0.1
 
-This library provides UPS tracking tools.
+This library tracks packages.
 
 *Note* Use at your own risk!
 
@@ -26,11 +26,33 @@ Example
 =======
 
 >>> from packagetrack import Package
->>> package = Package('1Z 999 999 99 9999 999 9')
-
->>> package.identify_shipper()
+>>> package = Package('1Z9999999999999999')
+# Identify packages (UPS, FedEx, and USPS)
+>>> package.shipper
 'UPS'
->>> package.track()
+# Track packages (UPS only, requires API access)
+>>> info = package.track()
+>>> print info.status
+IN TRANSIT TO
+>>> print info.delivery_date
+2010-06-25 00:00:00
+>>> print info.last_update
+2010-06-19 00:54:00
+# Get tracking URLs (UPS, FedEx, and USPS)
+>>> print package.url()
+http://wwwapps.ups.com/WebTracking/processInputRequest?TypeOfInquiryNumber=T&InquiryNumber1=1Z9999999999999999
+
+
+UPS API Configuration
+=====================
+
+To enable UPS package tracking, get an account and an API license number on the
+UPS website, then make a file at ~/.packagetrack that looks like::
+
+    [UPS]
+    license_number = XXXXXXXXXXXXXXXX
+    user_id = XXXX
+    password = XXXX
 
 License
 =======
