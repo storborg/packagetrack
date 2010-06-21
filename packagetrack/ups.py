@@ -7,7 +7,7 @@ from .data import TrackingInfo
 
 
 class UPSInterface(object):
-    url = 'https://wwwcie.ups.com/ups.app/xml/Track'
+    api_url = 'https://wwwcie.ups.com/ups.app/xml/Track'
 
     def __init__(self):
         self.attrs = {'xml:lang': 'en-US'}
@@ -34,7 +34,7 @@ class UPSInterface(object):
 
     def send_request(self, tracking_number):
         body = self.build_request(tracking_number)
-        webf = urllib.urlopen(self.url, body)
+        webf = urllib.urlopen(self.api_url, body)
         resp = webf.read()
         webf.close()
         return resp
@@ -66,3 +66,8 @@ class UPSInterface(object):
         "Track a UPS package by number. Returns just a delivery date."
         resp = self.send_request(tracking_number)
         return self.parse_response(resp)
+
+    def url(self, tracking_number):
+        "Return a tracking info detail URL by number."
+        return ('http://wwwapps.ups.com/WebTracking/processInputRequest?'
+                'TypeOfInquiryNumber=T&InquiryNumber1=%s' % tracking_number)
