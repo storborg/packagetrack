@@ -16,10 +16,11 @@ class UPSInterface(object):
         return tracking_number.startswith('1Z')
 
     def build_access_request(self):
+        config = packagetrack.config
         d = {'AccessRequest':
-             {'AccessLicenseNumber': packagetrack.UPS_LICENSE_NUMBER,
-              'UserId': packagetrack.UPS_USER_ID,
-              'Password': packagetrack.UPS_PASSWORD}}
+             {'AccessLicenseNumber': config.get('UPS', 'license_number'),
+              'UserId': config.get('UPS', 'user_id'),
+              'Password': config.get('UPS', 'password')}}
         return dict_to_xml(d, self.attrs)
 
     def build_track_request(self, tracking_number):

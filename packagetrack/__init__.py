@@ -1,3 +1,6 @@
+import os.path
+from ConfigParser import ConfigParser
+
 from .ups import UPSInterface
 from .fedex import FedexInterface
 from .usps import USPSInterface
@@ -7,10 +10,8 @@ __version__ = '0.1'
 
 _interfaces = {}
 
-
-UPS_LICENSE_NUMBER = None
-UPS_USER_ID = None
-UPS_PASSWORD = None
+config = ConfigParser()
+config.read([os.path.expanduser('~/.packagetrack')])
 
 
 def register_interface(shipper, interface):
