@@ -1,7 +1,7 @@
 class FedexInterface(object):
 
     def identify(self, tracking_number):
-        return len(tracking_number) == 15
+        return len(tracking_number) in (12, 15)
 
     def track(self, tracking_number):
         raise NotImplementedError

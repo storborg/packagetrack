@@ -57,11 +57,11 @@ class TestPackageTrack(TestCase):
         assert url.startswith('http')
 
     def test_identify_unknown(self):
-        assert Package('143244235235').shipper == None
+        assert Package('14324423523').shipper == None
 
     def test_track_unknown(self):
         try:
-            Package('123912412480').track()
+            Package('12391241248').track()
         except UnsupportedShipper:
             pass
         else:
