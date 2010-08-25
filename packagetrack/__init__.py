@@ -50,3 +50,11 @@ class Package(object):
 
     def url(self):
         return get_interface(self.shipper).url(self.tracking_number)
+
+
+def linkify_tracking_number(tracking_number):
+    from webhelpers.html.tags import HTML
+    try:
+        return HTML.a(tracking_number, href=Package(tracking_number).url())
+    except UnsupportedShipper:
+        return tracking_number

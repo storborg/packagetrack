@@ -67,3 +67,15 @@ class TestPackageTrack(TestCase):
         else:
             raise AssertionError("tracking package with unknown "
                                  "shipper should fail")
+
+    def linkify_ups(self):
+        num = '1Z9999999999999999'
+        link = linkify_tracking_number(num)
+        assert 'href' in link
+        assert num in link
+
+    def linkify_unknown(self):
+        num = '123412-412412412-ABC'
+        link = linkify_tracking_number(num)
+        assert num in link
+        assert 'href' not in link
