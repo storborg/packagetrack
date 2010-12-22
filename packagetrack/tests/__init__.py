@@ -60,6 +60,10 @@ class TestPackageTrack(TestCase):
         assert num in url
         assert url.startswith('http')
 
+    def test_usps_validate(self):
+        assert Package('9405503699300451135169').validate()
+        assert not Package('9405503699300451134169').validate()
+
     def test_identify_unknown(self):
         assert Package('14324423523').shipper == None
 
