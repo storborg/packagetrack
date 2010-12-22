@@ -29,6 +29,10 @@ class TestPackageTrack(TestCase):
         assert isinstance(info.delivery_date, date)
         assert isinstance(info.last_update, datetime)
 
+    def test_validate_ups(self):
+        assert Package('1Z58R4770350889570').validate()
+        assert not Package('1Z58R4770350889572').validate()
+
     def test_identify_fedex(self):
         assert Package('012345678901234').shipper == 'FedEx'
 
