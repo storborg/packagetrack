@@ -9,3 +9,6 @@ class FedexInterface(object):
     def url(self, tracking_number):
         return ('http://www.fedex.com/Tracking?tracknumbers=%s'
                 % tracking_number)
+    
+    def validate(self, tracking_number):
+        return True

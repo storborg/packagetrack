@@ -7,3 +7,6 @@ class USPSInterface(object):
     def url(self, tracking_number):
         return ('http://trkcnfrm1.smi.usps.com/PTSInternetWeb/'
                 'InterLabelInquiry.do?origTrackNum=%s' % tracking_number)
+
+    def validate(self, tracking_number):
+        return True

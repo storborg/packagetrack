@@ -51,6 +51,9 @@ class Package(object):
     def url(self):
         return get_interface(self.shipper).url(self.tracking_number)
 
+    def validate(self):
+        return get_interface(self.shipper).validate(self.tracking_number)
+
 
 def linkify_tracking_number(tracking_number):
     from webhelpers.html.tags import HTML
